@@ -1,0 +1,70 @@
+
+.AccordionPanelContent {
+	overflow: hidden;
+}
+
+.TabbedPanels {
+position: relative;
+margin: 10px 0;
+}
+.TabbedPanels ul.TabbedPanelsTabGroup {
+border-bottom: 1px solid rgb(219, 219, 219);
+margin: 0px !important;
+padding: 0px !important;
+}
+.TabbedPanels li.TabbedPanelsTab {
+display: inline-block;
+margin: 0px !important;
+padding: 0px !important;
+}
+.TabbedPanels li.TabbedPanelsTab:first-child {
+margin-left:0 !important;
+}
+.TabbedPanelsTabHover {
+}
+.TabbedPanelsTab.inactiveButton {
+}
+.TabbedPanels li.TabbedPanelsTab.TabbedPanelsTabSelected {
+    margin: 0px -1px -1px !important;
+    padding: 0px !important;
+    background: none repeat scroll 0% 0% rgb(255, 255, 255);
+    border-top: 1px solid rgb(219, 219, 219);
+    border-right: 1px solid rgb(219, 219, 219);
+    border-left: 1px solid rgb(219, 219, 219);
+    -moz-border-top-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    border-image: none;
+    border-bottom: 1px solid rgb(255, 255, 255) !important;
+}
+.TabbedPanels li.TabbedPanelsTab a {
+margin: 0px !important;
+padding: 0px 14px !important;
+height: 40px;
+line-height: 40px;
+font-weight: bold;
+color: rgb(102, 102, 102);
+}
+.TabbedPanelsTab.inactiveButton a {
+}
+.TabbedPanels li.TabbedPanelsTab.TabbedPanelsTabSelected a {
+color: rgb(0, 147, 208) !important;
+}
+.TabbedPanelsTab
+.TabbedPanelsContentGroup {
+	height:195px;
+	overflow:hidden;
+}
+.TabbedPanelsTab:hover {
+background: none repeat scroll 0% 0% rgb(99, 166, 217) !important;
+}
+.TabbedPanelsTab:hover a {
+color: #000 !important;
+}
+.TabbedPanelsContent {
+padding:5px !important;
+}
+.TabbedPanelsContent p {
+margin:0 !important;
+}

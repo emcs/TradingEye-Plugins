@@ -1,0 +1,128 @@
+<script language="JavaScript" type="text/javascript">
+	function validate(){
+		 var flag=0;
+		 re = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+		 if(document.getElementById('start_date').value != '' && !trim(document.getElementById('start_date').value).match(re)) {
+			alert("Invalid date format: " + document.getElementById('start_date').value);
+			document.getElementById('start_date').focus();
+			return false;
+		 }
+		 if(document.getElementById('start_date').value == '' && document.getElementById('end_date').value != ''){
+ 			flag=1;
+		 }
+
+		 if(document.getElementById('end_date').value != '' && !trim(document.getElementById('end_date').value).match(re)){
+			alert("Invalid date format: " + document.getElementById('end_date').value); document.getElementById('end_date').focus();
+			return false;
+		 }else if(flag){
+				alert('Please enter the start date.');
+				document.getElementById('start_date').focus();
+				return false;
+		 }
+		 if(document.getElementById('end_date').value == '' && document.getElementById('start_date').value !=''){
+		 		alert('Please enter the end date.');
+				document.getElementById('end_date').focus();
+				return false;
+		 }
+
+	}// end of function
+</script>
+
+
+<style>
+
+#codeError {
+	background:#FFF8DB url(errorIcon.gif) no-repeat scroll 10px 50%;
+	border:2px solid #FFEB99;
+	color:#555555;
+	padding:7px 10px 7px 34px;
+}
+
+</style>
+<script language="JavaScript" type="text/javascript">
+	var SagePlugin = {
+
+	 customer: function() {
+		 $$('.sage_customer').invoke('show');
+		 $$('.sage_transaction').invoke('hide');
+	 },
+	 transaction: function() {
+		 $$('.sage_customer').invoke('hide');
+		 $$('.sage_transaction').invoke('show');
+	 },
+	 postreceipts_on_off: function(){
+	 	$('postreceiptsto_div').toggle();
+	 	$('postsalereceipt_text').value="";
+	 	$('postsalereceipt_text').focus();
+	 }
+	}
+
+</script>
+
+
+
+
+<!--  CUSTOMER CSV DOWNLOAD FORM -->
+<div class="sage_customer">
+ <form action="{TPL_VAR_SITEURL}plugins/quickbooks/index.php" method="post" name="myFrm" onsubmit="javascript: return validate();">
+ <table width="600">
+   	<tr class="white-a">
+		<th class="prod-builder headline" colspan="3"><a href="{TPL_VAR_SITEURL}plugins/quickbooks/index.php?csvtype=help" onClick="helpWindow()" target="windowname"><img src="{GRAPHICSMAINPATH}admin/icons/question-mrk-16.gif" alt="Help" /></a>
+
+		<a href="javascript:history.go(-1)"><img src="{GRAPHICSMAINPATH}admin/blue/go_back.gif" alt="Go back" /></a>
+		QuickBooks - Customer CSV Download
+		</th>
+	</tr>
+
+	<tr>
+	        <td class="txt-right"><label for="start_date"> From (dd/mm/yyyy) (*)</label></td>
+	        <td class="txt-left"><span class="calInputBox"><input type="text" id="start_date" name="start_date" value="" size="7" class="txt-field" maxlength="20" />&nbsp;</span>
+				<span class="calImage"><a href="javascript:cal2.popup();"><img src="{TPL_VAR_SITEURL}graphics/admin/blue/cal.gif" width="16" height="16" border="0" alt="Click Here to Pick up the date" title="Click Here to Pick up the date" /></a></span>
+				<script language="JavaScript" type="text/javascript">
+					var cal2 = new calendar2(document.forms[0].elements['start_date']);
+						cal2.year_scroll = true;
+						cal2.time_comp = false;
+				</script>
+			</td>
+    </tr>
+
+    <tr>
+        <td class="txt-right"><label for="end_date"> To (dd/mm/yyyy)(*)</label></td>
+        <td class="txt-left"><span class="calInputBox"><input type="text" id="end_date" name="end_date" value="" size="7" class="txt-field" maxlength="20" />&nbsp;</span>
+		<span  class="calImage"><a href="javascript:cal3.popup();"><img src="{TPL_VAR_SITEURL}graphics/admin/blue/cal.gif" width="16" height="16" border="0" alt="Click Here to Pick up the date" title="Click Here to Pick up the date" /></a></span>
+			<script language="JavaScript" type="text/javascript">
+					var cal3 = new calendar2(document.forms[0].elements['end_date']);
+						cal3.year_scroll = true;
+						cal3.time_comp = false;
+			</script>
+		</td>
+    </tr>
+    <tr>
+	 	<td>&nbsp;</td>
+		<td class="txt-left">
+			<select name="csvtype">
+				<option value="user"> Customer CSV </option>
+				<option value="supplier"> Supplier CSV </option>
+			</select>
+			<br />
+			<br />
+			<input type="submit" name="submit" value="Download"  />
+		</td>
+	</tr>
+	<tr>
+		<td class="txt-left" colspan="2">
+		<!-- BEGIN ERRMSG_CUS_BLK -->
+		<p id='codeError'>
+		{TPL_CUS_ERRMSG}
+		</p>
+		<!-- END ERRMSG_CUS_BLK -->
+		</td>
+	</tr>
+</table>
+</form>
+</div>
+
+</div>
+
+
+

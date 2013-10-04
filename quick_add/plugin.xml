@@ -1,0 +1,7 @@
+<plugin>
+	<name>Quick Add To Cart Buttons</name>
+	<description>Adds add to cart buttons to attached product thumbnails. Visitor remains on same page when clicked and the amount of items in cart, and the total cost is updated.</description>
+	<author>Tradingeye</author>
+	<version>1.0</version>
+	<image></image>
+</plugin>

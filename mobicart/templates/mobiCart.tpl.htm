@@ -1,0 +1,348 @@
+<style>
+select
+{
+	float:none !important;
+	width:100% !important;
+	height:auto !important;
+	background:none !important;
+}
+.delete
+{
+	cursor:pointer;
+}
+</style>
+<script language="JavaScript" type="text/javascript">
+	function validateForm() {
+	
+		var frm = document.ThisForm;
+		
+		if(isNull(frm.MobiCartUsr.value)){
+		
+			alert("You must enter a MobiCart Username.");
+		
+			frm.MobiCartUsr.value = '';
+		
+			frm.MobiCartUsr.focus();
+		
+			return false;
+		
+		}
+		
+		if(isNull(frm.MobiCartAPI.value)){
+		
+			alert("You must enter a MobiCart API key.");
+		
+			frm.MobiCartAPI.value = '';
+	
+			frm.MobiCartAPI.focus();
+	
+			return false;
+		
+		}
+		
+		return true;
+	
+	}
+</script>
+
+<!-- BEGIN TPL_MOBIERR_BLOCK -->
+	<div class="popNegative">{TPL_VAR_MOBIERR}</div>
+<!-- END TPL_MOBIERR_BLOCK -->
+
+<!-- BEGIN TPL_MOBICONF_BLOCK -->
+	<div class="historyWidgetContainer">
+		<a href="adminindex.php">Home</a> <strong>&raquo;</strong> 
+		<a href="adminindex.php?action=mobicart.home&flag=mobicart">MobiCart Settings</a>
+	</div>
+	
+	<div class="fullWidgetContainer">
+		<div class="WidgetTitle">MobiCart Admin</div>
+		<div class="WidgetContent">
+			<form action="{TPL_VAR_SITEURL}admin/adminindex.php?action=mobicart.update" method="post" name="ThisForm" id="ThisForm" onsubmit="return validateForm();">
+				{TPL_VAR_MSG}
+				<table class="whiteTable2 Orders OneColum" summary="Inventory List" cellpadding="0" cellspacing="5">
+					<tbody>
+						<tr>
+							<td class="first"><label>MobiCart Status</label></td>
+							<td>Enable: <input type="radio" name="MobiCartStatus" value="enabled" {TPL_VAR_MOBISTATUSEN} /> Disable: <input type="radio" name="MobiCartStatus" value="disabled" {TPL_VAR_MOBISTATUSDI}/></td>
+						</tr>
+						<tr>
+							<td class="first"><label>MobiCart Username</label></td>
+							<td align="left"><input type="text" name="MobiCartUsr" value="{TPL_VAR_MOBICARTUSR}" /></td>
+						</tr>
+						<tr>
+							<td class="first"><label>MobiCart API Key</label></td>
+							<td><input type="text" name="MobiCartAPI" value="{TPL_VAR_MOBICARTAPI}" /></td>
+						</tr>
+						<tr>
+							<td class="first"><label>MobiCart Store ID</label></td>
+							<td><input type="text" name="MobiCartSID" value="{TPL_VAR_MOBICARTSID}" /> <br /><small>Don't know? Click save then click <a class="help lightwindow" params="lightwindow_width=850,lightwindow_height=500,lightwindow_type=external" href="../help/mobicart-store.php">here</a>.</small></td>
+						</tr>
+					</tbody>
+				</table>
+				<p class="formButtonWrapper">
+					<button type="submit" class="formButton"><img src="../graphics/i_tick.gif" alt="Update MobiCart Config" /> Update MobiCart Config</button>
+				</p>
+			</form>
+			<div class="WidgetTitle">Tradingeye to Mobicart Synchronization</div>
+			To synchronize Tradingeye with Mobicart you first need to select the departments and products you wish to synchronize. First select a department. Next click on your desired products. Click on a product again to remove it. You can also click and hold the mouse button to select/deselect multiple products. Once you have added all your departments and products, click the sync selected button. If you want to sync everything, simply click the sync all button. Note that Sub Sub Departments cannot be synchronized with Mobicart. In addition, if a product is assigned to multiple departments, it will only be assigned to the first department that is processed. To avoid this issue, have unique products. Rather than assigning the same product to multiple departments, copy the product, and give it a slightly different name. Also please note that all products and departments on Mobicart will be deleted.
+				<table class="whiteTable2 Orders" cellpadding="0" cellspacing="5">
+					<tbody>
+						<tr><th>Department</th><th>Products</th></tr>
+						<tr>
+							<td class="first" width="50%" valign="top">
+								<select id="departments">
+									<option value="false">Select...</option>
+									<!-- BEGIN TPL_DEPTIDS_BLK -->
+									<option value="{TPL_VAR_DEPTIDS}">{TPL_VAR_DEPTNAMES}</option>
+									<!-- END TPL_DEPTIDS_BLK -->
+								</select>
+							</td>
+							<td width="50%" valign="top">
+								<span id="outterprod">
+								<select size="15" id="products">
+									<option value="false">No Products Available</option>
+								</select></span>
+								<script type="text/javascript">
+									var added = [];
+									var mousedownflag = -1;
+									var mousedowny;
+									var mouseupy;
+									var selectedprod = [];
+									var allprod = $.parseJSON('{TPL_VAR_DEPTPRODJSARR}');
+									var allprod2 = $.parseJSON('{TPL_VAR_DEPTPRODJSARR2}');
+									var notadded = new Array();
+									$.extend(true,notadded,allprod);
+									$("#departments").change(function() {
+										var tempstring = "";
+										//if($("#departments").val() != "false")
+										//{
+											if(typeof(selectedprod[$("#departments").val()]) =="undefined")
+											{
+												selectedprod[$("#departments").val()]=[];
+											}
+											tempstring = "<select multiple size=\"15\" id=\"products\"><option selected value=\"false\">Choose A Product...</option>";
+											//alert("type: "+typeof(allprod[$("#departments").val()])+" val:"+allprod[$("#departments").val()][1]);
+											if(typeof(allprod[$("#departments").val()]) == "undefined")
+											{
+												tempstring = "<select multiple size=\"15\" id=\"products\"><option value=\"false\">No Products Available</option>";
+											}
+											else
+											{
+											if(allprod[$("#departments").val()][1].length <1)
+											{
+												//alert("type: "+typeof(allprod[$("#departments").val()])+" val:"+allprod[$("#departments").val()][1]);
+												tempstring = "<select multiple size=\"15\" id=\"products\"><option value=\"false\">No Products Available</option>";
+											}
+											else
+											{
+												for (var i=1; i<allprod[$("#departments").val()][1].length; i=i+2)
+												{
+													tempstring = tempstring + "<option id=\"" + i + "\" value=\"" + i + "\">" + allprod[$("#departments").val()][1][i] + "</option>";
+												}
+											}
+											}
+											mousedownflag = -1;
+											tempstring = tempstring + "</select>";
+											$("#outterprod").html(tempstring);
+											$("#products > option").mousedown(function(e) {
+												mousedownflag = this;
+												mousedowny =e.pageY;
+											});
+											
+											$("#products > option").mouseup(function(e) {
+												mouseupy =e.pageY;
+												var temparray = Array();
+												if($(mousedownflag).val() != -1 && $(this).val() != $(mousedownflag).val())
+												{
+													if(mousedowny < mouseupy)
+													{
+													//went down
+														//$(mousedownflag).nextUntil(this,"option"),function (element){
+														// temparray.push($(element).val());
+														//  return $(element).val();
+														//}
+														//temparray.push($(mousedownflag).val());
+														var thisele = mousedownflag;
+														temparray.push($(thisele).val());
+														while($(thisele).val() != $(this).val())
+														{
+															thisele = $(thisele).next()
+															//alert("Option Sent:"+$(thisele).html());
+															temparray.push($(thisele).val());
+														}
+													}
+													else
+													{
+													//went up
+														//$(this).nextUntil(mousedownflag,"option"),function (element){
+														//  temparray.push($(element).val());
+														//  return $(element).val();
+														//}
+														//temparray.push($(mousedownflag).val());
+														var thisele = this;
+														temparray.push($(thisele).val());
+														while($(thisele).val() != $(mousedownflag).val())
+														{
+															thisele = $(thisele).next()
+															//alert("Option Sent:"+$(thisele).html());
+															temparray.push($(thisele).val());
+														}
+													}
+													
+												}
+												else
+												{
+												temparray.push($(this).val());
+												}
+												//alert(temparray.join(','))
+												for (var i=0; i<temparray.length; i=i+1)
+												{
+													if(temparray[i] != "false" && temparray[i] != false && typeof(temparray[i]) != "undefined" && temparray[i] != "undefined" && temparray[i] != undefined)
+													{
+														//alert("check:"+check_unique(temparray[i],selectedprod)+" val:"+temparray[i]+" arr:"+selectedprod);
+														//if(temparray[i].indexOf(",") == -1)
+														//{
+														//	var tempstr = temparray[i].split(",");
+														//	temparray[i] = tempstr[0];
+														//	temparray.push(tempstr[1]);
+														//}
+														if(check_unique(temparray[i],selectedprod[$("#departments").val()]))
+														{
+															selectedprod[$("#departments").val()].push(temparray[i]);
+														}
+														else
+														{
+															selectedprod[$("#departments").val()].splice(selectedprod[$("#departments").val()].indexOf(temparray[i]),1);
+														}
+													}
+												}
+												$("#products").val(selectedprod[$("#departments").val()])
+												refreshit();
+											});
+										$("#products").val(selectedprod[$("#departments").val()])
+										//}
+									});
+									function check_unique(prod, arr)
+									{
+										for(var x = 0; x < arr.length; x += 1)
+											{
+												if(prod == arr[x])
+												{
+													return false;
+												}
+											}
+											return true;
+									}
+									function remove_prod(prod,arr)
+									{
+										arr.splice(prod-1,2);
+									}
+									function refreshit()
+									{
+										var tempstring = '<form id="addedform"><input type="hidden" id="owners" name="owners" value="{TPL_VAR_DEPTOWNERS}"/><table id="added" class="whiteTable Orders OneColumn" cellpadding="0" cellspacing="5"><tr><th width=\"50%\">Added Departments</th><th width=\"50%\">Added Products</th></tr>';
+												var z = 0;
+											for(var x = 0; x < selectedprod.length; x += 1)
+											{
+												var flag = 0;
+												if(typeof(selectedprod[x]) != "undefined" && selectedprod[x] != null && selectedprod[x].length > 0)
+												{
+													if(allprod[x][0] == null)
+													{
+														allprod[x][0] = "Homepage";
+													}
+													tempstring = tempstring + "<tr><td>" + allprod[x][0] + "</td><td>";
+													for(var y = 0; y < selectedprod[x].length; y += 1)
+													{
+														if(flag == 1)
+														{
+															tempstring = tempstring + ", " + allprod[x][1][selectedprod[x][y]] + "<input type=\"hidden\" name=\"prod" + z + "\" value=\"" + x + "," + allprod[x][1][selectedprod[x][y] - 1] + "\" />";
+															z = z + 1;
+														}
+														else
+														{
+															tempstring = tempstring + allprod[x][1][selectedprod[x][y]] + "<input type=\"hidden\" name=\"prod" + z + "\" value=\"" + x + "," + allprod[x][1][selectedprod[x][y] - 1] + "\" />";
+															flag = 1;
+															z = z + 1;
+														}
+													}
+													tempstring = tempstring + "</td></tr>";
+												}
+											}
+											tempstring = tempstring + "</table></form>";
+											$("#addedoutter").empty().html(tempstring);
+									}
+									function sync_selected()
+									{
+										var data = $("#addedform").serialize();
+										//alert(data);
+										var mycount = 0;
+										for(var z = 0; z < selectedprod.length; z+= 1)
+										{
+											mycount = mycount + selectedprod[z].length;
+										}
+										data = data + "&count=" + mycount;
+										//alert(data);
+										sync_mobi(data);
+									}
+									function sync_all()
+									{
+										var allids = $("#owners").serialize();
+										var x = 0;
+										for(var z = 0; z < allprod.length; z+= 1)
+										{
+											if(typeof(allprod[z]) != "undefined" && typeof(allprod[z][0]) != "undefined")
+											{
+												for(var y = 0; y < allprod[z][1].length; y+= 2)
+												{
+													allids = allids + "&prod" + x + "=" + z + "%2C" + allprod[z][1][y];
+													x = x + 1;
+												}
+											}
+										}
+										allids = allids + "&count="+x;
+										sync_mobi(allids);
+									}
+									function sync_mobi(data)
+									{
+										$.post('{TPL_VAR_AJAX}', data, function(data) {
+											var result = data.split("|||");
+											//result = result[0].split("<br/>");
+											//$temp = result[];
+											//result = result[0].splut(",")
+											alert(result[0]);
+										});
+									}
+								</script>
+							</td>
+						</tr>
+						<tr>
+							<td class="first" colspan="2">
+							<span id="addedoutter">
+								<form id="addedform">
+								<input type="hidden" id="owners" name="owners" value="{TPL_VAR_DEPTOWNERS}"/>
+								<table id="added" class="whiteTable Orders OneColumn" cellpadding="0" cellspacing="5">
+									<tr><th>Selected Departments</th><th>Selected Products</th></tr>
+									<tr>
+										<td width="50%">
+											No departments selected.
+										</td>
+										<td width="50%">
+											No products selected.
+										</td>
+									</tr>
+								</table>
+								</form>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div>
+				<button class="formButton Right" style="clear:none;" type="button" onclick="sync_all();"><img src="../graphics/i_add.gif" alt="i_add">Sync All</button>
+				<button class="formButton Right" style="clear:none;" type="button" onclick="sync_selected();"><img src="../graphics/i_add.gif" alt="i_add">Sync Selected</button>
+				</div>
+				<br style="clear:both;"/>
+        </div>
+    </div>
+<!-- END TPL_MOBICONF_BLOCK -->

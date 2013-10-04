@@ -1,0 +1,139 @@
+<script  type="text/javascript">
+	<!--
+		numberoftimes = 0;
+		thetimer1 = 0;
+		thetimer2 = 0;
+		function incrementit() {
+			thetimer1 += 1;
+			thespacer = "";
+			if (thetimer1 > 59) {
+				thetimer2 += 1;
+				thetimer1 = 0;
+			}
+			if (thetimer1 < 10) {thespacer = "0";}
+				document.ThisForm.timer.value = thetimer2 + ":" + thespacer + thetimer1;
+				setTimeout('incrementit()',1000);
+		}
+		function onlyonce() {
+			document.ThisForm.submitbutton.value='Verifying...';
+			numberoftimes += 1;
+			if (numberoftimes > 1) { 
+				var themessage = "Please be patient. You have already submitted this form. Pressing submit multiple times will result in your account being billed multiple times. You will receive a response momentarily.";
+				if (numberoftimes == 3) {
+					themessage = "DO NOT PRESS SUBMIT MULTIPLE TIMES!!! YOUR ACCOUNT WILL BE BILLED EACH TIME YOU PRESS SUBMIT!!! Processing may take up to one minute.";
+				}
+				alert(themessage);
+				return false;
+			} else {
+				setTimeout('incrementit()',1000);
+				return true;
+			}
+		}
+		var vatpostageflag = {TPL_VAR_VAT_POSTAGE};
+		var vatpostagerate = {TPL_VAR_VAT_RATE};
+		var vatitemamount = {TPL_VAR_ITEM_TOTAL};
+		var totalbackup = {TPL_VAR_TOTAL};
+		var taxbackup = {TPL_VAR_VATTOTAL};
+	// -->
+</script>
+<div id="start"><!-- dont remove, one page checkout uses this div --></div>
+<h2 id="pageTitle">{LANG_VAR_REVIEWYOURORDER}</h2>
+<div id="content"> 
+	<form action="{TPL_VAR_FORMURL}" method="post" name="ThisForm" id="ThisForm" onsubmit="return onlyonce();">
+		<table summary="Products in cart">
+			<tr>
+				<th>Qty</th>
+				<th>Product</th>			
+				<th>Description</th>
+				<th>Price</th>
+				<th>Total</th>
+			</tr>
+			{TPL_VAR_ITEMS}
+		</table>
+		<!-- BEGIN TPL_SHIP_OPTIONS_BLK -->
+		<div id="content" class="paypalexpress_content"><h2>Choose a Shipping Option</h2></div>
+		{TPL_VAR_SHIP_OPTIONS}
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				jQuery("#paypalformsubmit").attr("disabled", "disabled");
+			});
+			$('input:radio').change(function() {
+					jQuery("#paypalformsubmit").removeAttr("disabled");
+					var temp1 = jQuery(this).val();
+					var temp2 = jQuery("#opval"+temp1).val();
+					jQuery("#shipamount").html((parseFloat(temp2)).toFixed(2));
+					jQuery("#totalamount").html((totalbackup + parseFloat(temp2)).toFixed(2));
+					if(vatpostageflag == 1)
+					{
+						jQuery("#vatamount").html((vatpostagerate * (parseFloat(temp2) + parseFloat(vatitemamount))).toFixed(2));
+						var total = parseFloat(jQuery("#subamount").html())+parseFloat(jQuery("#shipamount").html())+parseFloat(jQuery("#vatamount").html());
+						jQuery("#totalamount").html((total).toFixed(2));
+					}
+			});
+		</script>
+		<!-- END TPL_SHIP_OPTIONS_BLK -->
+		<!-- BEGIN MPOINT_BLK -->
+		<p class="note">This order accumulates ({TPL_VAR_EARNEDMP}) member loyalty points.</p>
+		<!-- BEGIN MPOINT_USE_BLK -->
+		<script type="text/javascript">
+			var mypoints = {TPL_VAR_MP};
+			var mypointv = {TPL_VAR_MPv};
+			var totalbefore;
+		</script>
+		<P class="note">You have {TPL_VAR_MP} points. Woud you like to use your points? <input id="mpf" type="checkbox" name="mpf" value="1"/>
+		<script type="text/javascript">
+			jQuery("#mpf").change(function(){
+				var currenttotal = parseFloat(jQuery("#subamount").html());
+				if(jQuery(this).is(':checked'))
+				{
+					if(mypoints * mypointv > currenttotal)
+					{
+						jQuery("#subamount").html('0.01');
+						var total = parseFloat(jQuery("#subamount").html())+parseFloat(jQuery("#shipamount").html())+parseFloat(jQuery("#vatamount").html());
+						jQuery("#totalamount").html((total).toFixed(2));
+					}
+					else
+					{
+						jQuery("#subamount").html(currenttotal - (mypointv * mypoints)).toFixed(2);
+						var total = parseFloat(jQuery("#subamount").html())+parseFloat(jQuery("#shipamount").html())+parseFloat(jQuery("#vatamount").html());
+						jQuery("#totalamount").html((total).toFixed(2));
+					}
+				}
+				else
+				{
+					if(mypoints * mypointv > currenttotal)
+					{
+						var total = totalbefore;
+						jQuery("#subamount").html((total).toFixed(2));
+						var total = parseFloat(jQuery("#subamount").html())+parseFloat(jQuery("#shipamount").html())+parseFloat(jQuery("#vatamount").html());
+						jQuery("#totalamount").html((total).toFixed(2));
+					}
+					else
+					{
+						jQuery("#subamount").html(currenttotal + (mypointv * mypoints)).toFixed(2);
+						var total = parseFloat(jQuery("#subamount").html())+parseFloat(jQuery("#shipamount").html())+parseFloat(jQuery("#vatamount").html());
+						jQuery("#totalamount").html((total).toFixed(2));
+					}
+				}
+				totalbefore = currenttotal;
+			});
+		</script>
+		<!-- END MPOINT_USE_BLK -->
+		<!-- END MPOINT_BLK -->
+		<dl id="total">
+			<dt>Subtotal</dt>
+			<dd>{TPL_VAR_CURRENCY}<span id="subamount">{TPL_VAR_SUBTOTAL}</span></dd>
+			<dt>Shipping</dt>
+			<dd>{TPL_VAR_CURRENCY}<span id="shipamount">{TPL_VAR_SHIPTOTAL}</span></dd>
+			<dt>VAT</dt>
+			<dd>{TPL_VAR_CURRENCY}<span id="vatamount">{TPL_VAR_VATTOTAL}</span></dd>
+			<dt>Total</dt>
+			<dd>{TPL_VAR_CURRENCY}<span id="totalamount">{TPL_VAR_TOTAL}</span></dd>
+		</dl>
+		<p class="warning">Please do not stop the processing once the button is pressed.</p>
+		<p class="actions" style="display:block;">
+			<input type="text" name="timer" value="0:00" size="4" onfocus="this.blur();" class="formFieldShort" />
+			<input type="submit" id="paypalformsubmit" name="submitbutton" value="Confirm Payment" class="formButton" />
+		</p>
+	</form>
+</div>
