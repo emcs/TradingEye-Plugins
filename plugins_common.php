@@ -6,6 +6,7 @@ Product: TradingEye
 Version: 7.0.5
 =======================================================================================
 */
+defined('_TEEXEC') or die;
 error_reporting(E_ALL);	
 session_start();
 	include_once("../../configuration.php");
