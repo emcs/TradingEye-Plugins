@@ -1,0 +1,1 @@
+"{MODULES_PATH}index.php","replace","$obMainTemplate->set_var(\"TPL_VAR_GOOGLEANALYTICS\",$googleanalytics);","include_once(SITE_PATH.\"/plugins/bannerManager/classes/main/bannerManager.php\");\n$obBanner=new c_bannerManager($obDatabase,$obMainTemplate);\n$obBanner->selectBanners();\n$obMainTemplate->set_var(\"TPL_VAR_GOOGLEANALYTICS\",$googleanalytics);"

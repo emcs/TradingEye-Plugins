@@ -1,0 +1,176 @@
+<div class="historyWidgetContainer"><a href="adminindex.php?flag=dashboard">Home</a> <strong>&raquo;</strong> <a href="#">Banner Manager</a>
+<div id="builderCrumbs"></div></div>
+
+<div class="fullWidgetContainer">
+		<div class="WidgetTitle">Banner Manager</div>
+		<div class="WidgetContent">
+
+<link rel="stylesheet" type="text/css" href="jscript/lightbox/css/lightbox.css" media="screen" />
+<script type="text/javascript" src="jscript/prototype.js"></script>
+<script type="text/javascript" src="jscript/scriptaculous.js?load=effects"></script>
+<script type="text/javascript" src="jscript/lightbox/js/lightbox.js"></script>
+<script type="text/javascript" src="jscript/swfobject.js"></script>
+
+<script type="text/javascript">
+	function confirmDelete()
+	{
+		var msg = 'Are you sure you want to delete this banner?';
+		var agree = confirm(msg);
+		return (agree) ? true : false;
+	}
+	
+</script>
+<!-- BEGIN TPL_OVERVIEW_BLK -->
+
+<table width="550px" class="whiteTable">
+  <tr class="white-a"> 
+	<th class="prod-builder headline" colspan="5"><a href="{TPL_VAR_SITEURL}/plugins/bannerManager/index.php?mode=help" onClick="helpWindow()" target="windowname"><img src="{GRAPHICSMAINPATH}admin/icons/question-mrk-16.gif" alt="Help" /></a> 
+	  <a href="javascript:history.go(-1)"><img src="{GRAPHICSMAINPATH}admin/blue/go_back.gif" alt="Go back" /></a> Banner Manager</th>
+    <th class="add-product headline" colspan="3"><a href="?mode=add">+ Add a banner</a></th>
+  </tr>
+  
+  <tr class="gray">
+  	<td class="txt-left">Banner</td>
+    <td class="txt-left">Display page</td>
+    <td style="width:40px;">No. Views</td>
+    <td style="width:40px;">No. Clicks</td>
+    <td style="width:40px;">CTR</td>
+    <td style="width:40px;">Is active?</td>
+    <td style="width:40px;">Edit</td>
+    <td style="width:40px;">Delete</td>
+  </tr>
+  
+  <!-- BEGIN TPL_BANNERS_BLK -->
+  
+  <tr class="blue">
+  	<td colspan="8" class="txt-left"><strong>{BANNER_CAMPAIGN_NAME}</strong></td>
+  </tr>
+  
+   <tr>
+  	<td class="txt-left">{BANNER_FILE_LINK}</td>
+    <td>{BANNER_DISPLAY_PAGE}</td>
+    <td>{BANNER_NUM_VIEWS}</td>
+    <td>{BANNER_NUM_CLICKS}</td>
+    <td>{BANNER_CTR}%</td>
+    <td>{BANNER_IS_ACTIVE}</td>
+    <td><a href="?mode=edit&amp;bannerID={BANNER_ID}">Edit</a></td>
+    <td><a href="?mode=delete&amp;bannerID={BANNER_ID}" onclick="return confirmDelete();">Delete</a></td>
+  </tr>	
+  
+  <!-- END TPL_BANNERS_BLK -->	
+  
+</table>
+
+<!-- END TPL_OVERVIEW_BLK -->
+
+
+
+<!-- BEGIN TPL_ADD_EDIT_BLK -->
+<form action="?mode={MODE_FORM}" method="post" enctype="multipart/form-data">
+<table width="550px" class="whiteTable">
+  <tr class="white-a"> 
+	<th class="prod-builder headline" colspan="2"><a href="{TPL_VAR_SITEURL}/plugins/bannerManager/index.php?mode=help#addedit" onClick="helpWindow()" target="windowname"><img src="{GRAPHICSMAINPATH}admin/icons/question-mrk-16.gif" alt="Help" /></a> 
+	  <a href="javascript:history.go(-1)"><img src="{GRAPHICSMAINPATH}admin/blue/go_back.gif" alt="Go back" /></a> Banner Manager</th>
+  </tr>
+  <tr class="gray">
+  	<td class="txt-left" colspan="2"><strong>{MODE_CAPS} a banner</strong></td>
+  </tr>
+  <!-- BEGIN TPL_ERROR_BLK -->
+  <tr class="gray">
+  	<td class="txt-left" colspan="2">{ERROR_TEXT}</td>
+  </tr>
+  <!-- END TPL_ERROR_BLK -->
+  <tr class="blue">
+  	<td colspan="2">All fields marked with an asterisk(*) are compulsary</td>
+  </tr>
+  <tr>
+  	<td class="txt-left">Campaign name*:</td>
+    <td class="txt-left"><input type="text" name="campaignName" id="campaign" value="{POST_CAMPAIGN_NAME}" maxlength="30" /></td>
+  </tr>
+  <tr>
+  	<td class="txt-left" style="vertical-align:top;">Banner file*:</td>
+    <td class="txt-left">{EDIT_SHOW_CURRENT_FILE}<input type="file" name="bannerFile" id="bannerFile" /></td>
+  </tr>
+  <tr>
+  	<td class="txt-left">Banner position*:</td>
+    <td class="txt-left"><select name="bannerPos" id="bannerPos">
+    	<!-- BEGIN TPL_PLACEHOLDERS_BLK -->
+    	<option {POST_BANNER_POS}>{PLACEHOLDER_NAME}</option>
+        <!-- END TPL_PLACEHOLDERS_BLK -->
+    </select></td>
+  </tr>
+  <tr>
+  	<td class="txt-left">Link URL*:</td>
+    <td class="txt-left"><input type="text" name="linkURL" id="linkURL" value="{POST_LINK_URL}" maxlength="200" /></td>
+  </tr>
+  <!-- BEGIN TPL_NO_ACCEPT_FLASH_BLK -->
+  <input type="hidden" name="bannerType" id="bannerType" value="image" />
+  <!-- END TPL_NO_ACCEPT_FLASH_BLK -->
+  <!-- BEGIN TPL_ACCEPT_FLASH_BLK -->
+  <tr>
+  	<td class="txt-left">Banner type*:</td>
+    <td class="txt-left"><select name="bannerType" id="bannerType">
+    	<option value="image" {POST_BANNER_TYPE_IMAGE}>Image banner (gif, jpg)</option>
+        <option value="flash" {POST_BANNER_TYPE_FLASH}>Flash banner</option>
+    </select></td>
+  </tr>
+  <!-- END TPL_ACCEPT_FLASH_BLK -->
+  <tr>
+  	<td class="txt-left">Banner size*:</td>
+    <td class="txt-left">Width*: <input type="text" name="bannerWidth" id="bannerWidth" value="{POST_BANNER_WIDTH}" maxlength="4" size="4" />px |  Height*: <input type="text" name="bannerHeight" id="bannerHeight" value="{POST_BANNER_HEIGHT}" maxlength="4" size="4" />px</td>
+  </tr>  
+  <tr>
+  	<td class="txt-left">Display page:</td>
+    <td class="txt-left"><input type="text" name="displayPage" id="displayPage" value="{POST_DISPLAY_PAGE}" maxlength="200" /></td>
+  </tr>
+  <tr>
+  	<td class="txt-left">Banner is active?</td>
+    <td class="txt-left"><input type="checkbox" name="bannerActive" id="bannerActive" value="true" {POST_BANNER_ACTIVE} /></td>
+  </tr>
+  <tr>
+  	<td class="txt-left">&nbsp;</td>
+    <td class="txt-left"><input type="hidden" name="submitted" id="submitted" value="true" /><input type="submit" name="submit" id="submit" value="{MODE_CAPS} this banner" /></td>
+  </tr>
+ </table>
+ </form>
+<!-- END TPL_ADD_EDIT_BLK -->
+
+
+
+<!-- BEGIN VIEW_SWF_BLK -->
+
+<table width="550px" class="whiteTable">
+<tbody>
+  <tr class="white-a"> 
+	<th class="prod-builder headline"><a href="{TPL_VAR_SITEURL}/plugins/bannerManager/index.php?mode=help" onClick="helpWindow()" target="windowname"><img src="{GRAPHICSMAINPATH}admin/icons/question-mrk-16.gif" alt="Help" /></a> 
+	  <a href="javascript:history.go(-1)"><img src="{GRAPHICSMAINPATH}admin/blue/go_back.gif" alt="Go back" /></a> Banner Manager</th>
+  </tr>
+  
+  <tr class="gray">
+  	<td class="txt-left">Viewing SWF File: {SWF_FILE}</td>
+  </tr>
+  
+  <tr class="blue">
+  	<td class="txt-left"><strong>{SWF_CAMPAIGN_NAME}</strong></td>
+  </tr>
+  
+   <tr>
+  	<td class="txt-left">
+    <div id="swfBanner">You must install Adobe Flash</div>
+    <script type="text/javascript">
+	var so = new SWFObject("/plugins/bannerManager/flash/bannerHolder.swf", "movie", "{SWF_WIDTH}", "{SWF_HEIGHT}", "7", "#ffffff");
+	so.addVariable("bannerSWF", "{SWF_FILE}");
+    so.addVariable("linkURL", "{SWF_LINK}");
+	so.addVariable("bannerID", "{SWF_BANNER_ID}");
+	so.addVariable("bannerWidth", "{SWF_WIDTH}");
+	so.addVariable("bannerHeight", "{SWF_HEIGHT}");
+	so.addParam("scale", "noscale");
+	so.write("swfBanner");
+    </script>
+    </td>
+  </tr>	
+</tbody>
+</table>
+
+<!-- END VIEW_SWF_BLK -->
+</div>

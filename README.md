@@ -1,4 +1,0 @@
-TradingEye-Plugins
-==================
-
-TradingEye Plugins
